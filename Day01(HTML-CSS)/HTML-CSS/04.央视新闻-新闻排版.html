@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>【新思想引领新征程】推进长江十年禁渔 谱写长江大保护新篇章</title>
+
+  <!-- 方式2: 内部样式表 作用域: 仅对当前页面生效-->
+   <style>
+
+    /*方式一:元素选择器*/
+    span{
+
+      /*关键字表示法*/
+      /* color: gray; */
+
+      /*rgb表示法*/
+       color:rgb( 178,178,178); 
+
+      /*rgba表示法*/
+     /*  color:rgba( ,0,0,0.5); */
+
+      /*16进制表示法*/
+      /* color:#a09393; */
+   }
+
+
+   /*方式二: 类选择器*/
+   .cls{
+     color:#ff0000;
+   }
+
+
+   /*方式三:ID选择器*/
+   #time{
+    color: #48d810;
+   }
+
+   /* 把央视网的超链接下面的下滑线取消设置 */
+   a{
+       text-decoration: none;
+   }
+  </style>   
+
+  <!-- 方式3: 外部样式表 作用域: 对所有页面生效-->
+   <link rel="stylesheet" href="css/news.css"></link> -->
+  
+</head>
+<body>
+  <h1>【新思想引领新征程】推进长江十年禁渔 谱写长江大保护新篇章</h1>
+   <!--这里还要加入一个超链接 -->
+   <!-- 给我加入一个央视新闻的超链接 -->
+
+    <!-- a 超链接标签：
+    href: 链接地址 - url地址
+    target: 打开方式
+    _blank: 新窗口打开
+    _self: 本窗口打开(默认)  <a href="https://www.cctv.com/" >央视新闻</a>  
+  -->
+    <a href="https://www.cctv.com/" target="_blank">央视新闻</a> 
+   
+
+    <!-- 利用css去设置一下具体的字体样式 -->
+
+      <!-- 方式一:行内样式 -->
+     <!-- <span style="color:gray;"> 2024年05月15日 20:07</span> -->
+
+    
+     <!-- 这个css标签是一一对应的 就是span和方式1,2,3对应的 -->
+      <!-- 方式一:元素选择器 -->
+      <span> 2024年05月15日 20:07</span> 
+
+
+      <!-- 方式二:类选择器 -->
+      <span class="cls"> 2024年05月15日 20:07</span>
+
+      <!-- 方式三:ID选择器 -->
+       <span class="cls" id="time"> 2024年05月15日 20:07</span>
+
+      
+
+</body>
+</html>

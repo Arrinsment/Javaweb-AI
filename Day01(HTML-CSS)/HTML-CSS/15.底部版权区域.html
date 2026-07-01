@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tlias · 表格展示区</title>
+  <style>
+    /* 全局重置 + 基础 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: #f4f7fb;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    /* ----- 第一部分：导航栏 (保留) ----- */
+    .navbar {
+      background-color: #e0e0e0;
+      padding: 0 2rem;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #d0d0d0;
+      width: 100%;
+      max-width: 1400px;
+      border-radius: 16px 16px 0 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    }
+    .navbar-title {
+      font-size: 1.6rem;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      color: #1e2a3a;
+      white-space: nowrap;
+    }
+    .navbar-logout {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #2c3e50;
+      text-decoration: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 30px;
+      transition: background-color 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+    .navbar-logout:hover {
+      background-color: rgba(0, 0, 0, 0.07);
+      color: #0b1a2a;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    /* ----- 第二部分：搜索卡片 (保留) ----- */
+    .search-card {
+      width: 100%;
+      max-width: 1400px;
+      background-color: #ffffff;
+      border-radius: 0 0 12px 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+      padding: 1.6rem 2.2rem;
+      margin-top: 0.5rem;
+      border: 1px solid #eaeef3;
+      border-top: none;
+      margin-bottom: 1.8rem;
+    }
+    .search-form {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 1.2rem 2rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      flex: 1 0 120px;
+      min-width: 100px;
+    }
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #3b4a5c;
+      margin-bottom: 0.3rem;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+    .form-group input,
+    .form-group select {
+      padding: 0.6rem 0.9rem;
+      border: 1.5px solid #dce1e8;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      background-color: #fafcff;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
+      outline: none;
+      font-family: inherit;
+      color: #1e2a3a;
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: #7b8fa0;
+      box-shadow: 0 0 0 3px rgba(55, 94, 148, 0.08);
+      background-color: #ffffff;
+    }
+    .button-group {
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+      flex: 0 0 auto;
+      margin-left: auto;
+      padding-bottom: 1px;
+    }
+    .btn {
+      padding: 0.6rem 1.8rem;
+      border: none;
+      border-radius: 40px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      background-color: #eef2f6;
+      color: #1e2a3a;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: 0.3px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background-color: #1e2a3a;
+      color: white;
+      box-shadow: 0 4px 8px rgba(30, 42, 58, 0.10);
+    }
+    .btn-primary:hover {
+      background-color: #2b3b4f;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 14px rgba(30, 42, 58, 0.16);
+    }
+    .btn-outline {
+      background-color: transparent;
+      border: 1.5px solid #cdd6e0;
+      color: #2c3e50;
+    }
+    .btn-outline:hover {
+      background-color: #f2f6fc;
+      border-color: #9bafc0;
+    }
+
+    /* ----- 第三部分：表格展示区 (核心) ----- */
+    .table-wrapper {
+      width: 100%;
+      max-width: 1400px;
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.04);
+      padding: 1.8rem 1.5rem 1.5rem 1.5rem;
+      border: 1px solid #e6ecf2;
+      overflow-x: auto;           /* 小屏横向滚动 */
+    }
+
+    .table-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1e2a3a;
+      margin-bottom: 1.2rem;
+      letter-spacing: 0.3px;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .table-title span {
+      background: #eef2f6;
+      padding: 0.2rem 0.9rem;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #2c3e50;
+    }
+
+    /* 表格样式 — 美观大气 */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+      min-width: 780px;          /* 保证列宽合理 */
+    }
+
+    .data-table thead tr {
+      background-color: #f2f6fc;
+      border-radius: 16px 16px 0 0;
+    }
+
+    .data-table th {
+      text-align: left;
+      padding: 0.9rem 0.8rem;
+      font-weight: 700;
+      color: #1f2a3a;
+      border-bottom: 2px solid #dde3ea;
+      letter-spacing: 0.3px;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+
+    .data-table td {
+      padding: 0.9rem 0.8rem;
+      border-bottom: 1px solid #eef2f7;
+      vertical-align: middle;
+      color: #1e2a3a;
+    }
+
+    .data-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .data-table tbody tr:hover {
+      background-color: #f8faff;
+      transition: background 0.15s;
+    }
+
+    /* 头像列：小图片展示 */
+    .avatar-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .avatar-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      background-color: #e6edf5;
+      border: 2px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      transition: transform 0.2s;
+    }
+    .avatar-img:hover {
+      transform: scale(1.08);
+    }
+
+    /* 职位标签 (轻量徽章) */
+    .role-badge {
+      display: inline-block;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background-color: #eef3f9;
+      color: #1f3a4b;
+      letter-spacing: 0.2px;
+      white-space: nowrap;
+    }
+
+    /* 操作按钮组 (编辑 & 删除) */
+    .action-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .action-btn {
+      padding: 0.3rem 1rem;
+      border: none;
+      border-radius: 30px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+      letter-spacing: 0.3px;
+      background-color: #f0f4fa;
+      color: #1e2a3a;
+    }
+    .action-btn.edit {
+      background-color: #e4ecf7;
+      color: #1f3a5e;
+    }
+    .action-btn.edit:hover {
+      background-color: #cdddec;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0, 20, 40, 0.06);
+    }
+    .action-btn.delete {
+      background-color: #fce9ec;
+      color: #ac3a4a;
+    }
+    .action-btn.delete:hover {
+      background-color: #f8d6db;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(160, 30, 40, 0.08);
+    }
+    .action-btn:active {
+      transform: translateY(0);
+    }
+
+    /* 响应式微调 */
+    @media (max-width: 860px) {
+      .navbar { padding: 0 1.2rem; height: 62px; }
+      .navbar-title { font-size: 1.2rem; }
+      .search-card { padding: 1.2rem 1rem; }
+      .button-group { margin-left: 0; flex: 1 0 100%; justify-content: flex-start; margin-top: 0.2rem; }
+      .table-wrapper { padding: 1rem 0.8rem; }
+      .data-table { font-size: 0.85rem; min-width: 700px; }
+      .data-table th, .data-table td { padding: 0.6rem 0.4rem; }
+      .avatar-img { width: 32px; height: 32px; }
+    }
+
+    @media (max-width: 480px) {
+      .form-group { flex: 1 0 100%; }
+      .data-table { min-width: 600px; }
+      .action-group { gap: 0.3rem; }
+      .action-btn { padding: 0.2rem 0.7rem; font-size: 0.7rem; }
+    }
+
+    /* 装饰小提示 (同前) */
+    .demo-hint {
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #8a9aa8;
+      background: #f0f3f7;
+      padding: 0.4rem 1.6rem;
+      border-radius: 40px;
+      border: 1px solid #e2e8ef;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 第一部分：顶部导航栏 -->
+  <header class="navbar">
+    <div class="navbar-title">📘 Tlias智能学习辅助系统</div>
+    <a href="#" class="navbar-logout" onclick="alert('您已退出登录 (演示)'); return false;">退出登录 →</a>
+  </header>
+
+  <!-- 第二部分：搜索表单 -->
+  <div class="search-card">
+    <form class="search-form" onsubmit="alert('执行查询 (演示)'); return false;" onreset="alert('表单项已清空 (演示)'); return false;">
+      <div class="form-group">
+        <label for="nameInput">姓名</label>
+        <input type="text" id="nameInput" placeholder="请输入姓名" value="">
+      </div>
+      <div class="form-group">
+        <label for="genderSelect">性别</label>
+        <select id="genderSelect">
+          <option value="" selected>— 请选择 —</option>
+          <option value="男">男</option>
+          <option value="女">女</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="positionSelect">职位</label>
+        <select id="positionSelect">
+          <option value="" selected>— 请选择 —</option>
+          <option value="班主任">班主任</option>
+          <option value="讲师">讲师</option>
+          <option value="学工主管">学工主管</option>
+          <option value="教研主管">教研主管</option>
+          <option value="咨询师">咨询师</option>
+        </select>
+      </div>
+      <div class="button-group">
+        <button type="submit" class="btn btn-primary">🔍 查询</button>
+        <button type="reset" class="btn btn-outline">↺ 清空</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- 第三部分：表格展示区 -->
+  <div class="table-wrapper">
+    <div class="table-title">
+      📋 教职员工列表
+      <span>3 条记录</span>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>姓名</th>
+          <th>性别</th>
+          <th>头像</th>
+          <th>职位</th>
+          <th>入职日期</th>
+          <th>最后操作时间</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- 1. 令狐冲 -->
+        <tr>
+          <td><strong>令狐冲</strong></td>
+          <td>男</td>
+          <td>
+            <div class="avatar-cell">
+              <img class="avatar-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23b7c9d9'/%3E%3Ccircle cx='35' cy='40' r='8' fill='%232d3f4f'/%3E%3Ccircle cx='65' cy='40' r='8' fill='%232d3f4f'/%3E%3Cpath d='M30 65 Q50 80 70 65' stroke='%232d3f4f' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E" alt="令狐冲头像">
+              <span style="font-size:0.7rem; color:#6b7d8f;"></span>
+            </div>
+          </td>
+          <td><span class="role-badge">讲师</span></td>
+          <td>2020-03-15</td>
+          <td>2026-06-30 14:23</td>
+          <td>
+            <div class="action-group">
+              <button class="action-btn edit" onclick="alert('编辑 令狐冲 (演示)')">✎ 编辑</button>
+              <button class="action-btn delete" onclick="alert('删除 令狐冲 (演示)')">✕ 删除</button>
+            </div>
+          </td>
+        </tr>
+        <!-- 2. 任盈盈 -->
+        <tr>
+          <td><strong>任盈盈</strong></td>
+          <td>女</td>
+          <td>
+            <div class="avatar-cell">
+              <img class="avatar-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23f2d9c4'/%3E%3Ccircle cx='35' cy='40' r='8' fill='%23352b24'/%3E%3Ccircle cx='65' cy='40' r='8' fill='%23352b24'/%3E%3Cpath d='M28 62 Q50 78 72 62' stroke='%23b35e5e' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E" alt="任盈盈头像">
+            </div>
+          </td>
+          <td><span class="role-badge">教研主管</span></td>
+          <td>2019-11-01</td>
+          <td>2026-06-30 11:07</td>
+          <td>
+            <div class="action-group">
+              <button class="action-btn edit" onclick="alert('编辑 任盈盈 (演示)')">✎ 编辑</button>
+              <button class="action-btn delete" onclick="alert('删除 任盈盈 (演示)')">✕ 删除</button>
+            </div>
+          </td>
+        </tr>
+        <!-- 3. 林平之 -->
+        <tr>
+          <td><strong>林平之</strong></td>
+          <td>男</td>
+          <td>
+            <div class="avatar-cell">
+              <img class="avatar-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23d4c9b8'/%3E%3Ccircle cx='35' cy='40' r='7' fill='%232d241e'/%3E%3Ccircle cx='65' cy='40' r='7' fill='%232d241e'/%3E%3Cpath d='M32 63 Q50 74 68 63' stroke='%235c3e2e' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E" alt="林平之头像">
+            </div>
+          </td>
+          <td><span class="role-badge">咨询师</span></td>
+          <td>2021-07-22</td>
+          <td>2026-06-29 09:45</td>
+          <td>
+            <div class="action-group">
+              <button class="action-btn edit" onclick="alert('编辑 林平之 (演示)')">✎ 编辑</button>
+              <button class="action-btn delete" onclick="alert('删除 林平之 (演示)')">✕ 删除</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 装饰提示 -->
+  <div class="demo-hint">
+    ⚡ 第三部分 · 表格展示区 — 《笑傲江湖》人物数据
+  </div>
+</body>
+</html>

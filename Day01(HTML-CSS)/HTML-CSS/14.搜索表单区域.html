@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>搜索表单 · Tlias</title>
+  <style>
+    /* 全局重置 & 基础 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: #f4f6f9;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    /* ----- 第一部分：导航栏 (保留, 已实现) ----- */
+    .navbar {
+      background-color: #e0e0e0;
+      padding: 0 2rem;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #d0d0d0;
+      width: 100%;
+      max-width: 1200px;
+      border-radius: 12px 12px 0 0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+    .navbar-title {
+      font-size: 1.6rem;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      color: #1e2a3a;
+      white-space: nowrap;
+    }
+    .navbar-logout {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #2c3e50;
+      text-decoration: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 30px;
+      transition: background-color 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+    .navbar-logout:hover {
+      background-color: rgba(0, 0, 0, 0.07);
+      color: #0b1a2a;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    /* ----- 卡片容器 (让搜索表单区域独立、美观) ----- */
+    .search-card {
+      width: 100%;
+      max-width: 1200px;
+      background-color: #ffffff;
+      border-radius: 0 0 16px 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+      padding: 1.8rem 2.2rem;
+      margin-top: 0.5rem;
+      transition: box-shadow 0.2s;
+      border: 1px solid #eceff3;
+      border-top: none;
+    }
+
+    /* ----- 搜索表单 (核心) ----- */
+    .search-form {
+      display: flex;
+      flex-wrap: wrap;           /* 允许换行，但默认一行展示；极小屏换行 */
+      align-items: flex-end;     /* 底部对齐，让按钮与表单项底部平齐 */
+      gap: 1.2rem 2rem;          /* 行间距 1.2rem，列间距 2rem */
+      row-gap: 1.2rem;
+    }
+
+    /* 每个表单项的容器 (含 label + input/select) */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      flex: 1 0 120px;           /* 基础宽度120px，允许拉伸 */
+      min-width: 100px;          /* 保证最小宽度，避免过度挤压 */
+    }
+
+    /* label 样式 */
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #3b4a5c;
+      margin-bottom: 0.3rem;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+
+    /* 输入框 & 下拉选择 统一风格 */
+    .form-group input,
+    .form-group select {
+      padding: 0.6rem 0.9rem;
+      border: 1.5px solid #dce1e8;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      background-color: #fafcff;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
+      outline: none;
+      font-family: inherit;
+      color: #1e2a3a;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: #7b8fa0;
+      box-shadow: 0 0 0 3px rgba(55, 94, 148, 0.08);
+      background-color: #ffffff;
+    }
+
+    /* 下拉箭头自定义 (兼容) */
+    .form-group select {
+      appearance: auto;
+      cursor: pointer;
+    }
+
+    /* 按钮组容器 (两个按钮水平排列) */
+    .button-group {
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+      flex: 0 0 auto;           /* 不拉伸，保持内容宽度 */
+      margin-left: auto;        /* 让按钮组靠右 (同时保持与表单项对齐) */
+      padding-bottom: 1px;      /* 微调对齐 */
+    }
+
+    /* 通用按钮样式 */
+    .btn {
+      padding: 0.6rem 1.8rem;
+      border: none;
+      border-radius: 40px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      background-color: #eef2f6;
+      color: #1e2a3a;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: 0.3px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background-color: #1e2a3a;
+      color: white;
+      box-shadow: 0 4px 8px rgba(30, 42, 58, 0.12);
+    }
+    .btn-primary:hover {
+      background-color: #2b3b4f;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 14px rgba(30, 42, 58, 0.18);
+    }
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(30, 42, 58, 0.12);
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      border: 1.5px solid #cdd6e0;
+      color: #2c3e50;
+    }
+    .btn-outline:hover {
+      background-color: #f2f6fc;
+      border-color: #9bafc0;
+    }
+    .btn-outline:active {
+      background-color: #e6ecf3;
+    }
+
+    /* 让占位文本更精致 */
+    .form-group input::placeholder {
+      color: #aab7c9;
+      font-weight: 400;
+      opacity: 0.7;
+    }
+
+    /* 响应式：当屏幕宽度较小时，按钮组换行并靠左 */
+    @media (max-width: 760px) {
+      .search-form {
+        gap: 1rem 1.2rem;
+      }
+      .form-group {
+        flex: 1 0 140px;
+        min-width: 130px;
+      }
+      .button-group {
+        margin-left: 0;          /* 左对齐 */
+        flex: 1 0 100%;
+        justify-content: flex-start;
+        gap: 1rem;
+        margin-top: 0.4rem;
+      }
+      .btn {
+        padding: 0.6rem 1.6rem;
+        flex: 0 1 auto;
+      }
+      .search-card {
+        padding: 1.5rem 1.2rem;
+      }
+      .navbar {
+        padding: 0 1.2rem;
+        height: 62px;
+      }
+      .navbar-title {
+        font-size: 1.25rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .form-group {
+        flex: 1 0 100%;
+        min-width: 100%;
+      }
+      .button-group {
+        flex-wrap: wrap;
+        gap: 0.8rem;
+      }
+      .btn {
+        flex: 1 0 auto;
+        padding: 0.6rem 1rem;
+      }
+      .search-card {
+        padding: 1.2rem 0.8rem;
+      }
+    }
+
+    /* 装饰性分隔 (演示说明) */
+    .demo-hint {
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #8a9aa8;
+      background: #f0f3f7;
+      padding: 0.4rem 1.2rem;
+      border-radius: 40px;
+      border: 1px solid #e2e8ef;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 第一部分：顶部导航栏 (已实现) -->
+  <header class="navbar">
+    <div class="navbar-title"> Tlias智能学习辅助系统</div>
+    <a href="#" class="navbar-logout" onclick="alert('您已退出登录 (演示)'); return false;">退出登录 →</a>
+  </header>
+
+  <!-- 第二部分：搜索表单区域 (卡片) -->
+  <div class="search-card">
+    <form class="search-form" onsubmit="alert('执行查询 (演示)'); return false;" onreset="alert('表单项已清空 (演示)'); return false;">
+      
+      <!-- 1. 姓名 -->
+      <div class="form-group">
+        <label for="nameInput">姓名</label>
+        <input type="text" id="nameInput" placeholder="请输入姓名" value="">
+      </div>
+
+      <!-- 2. 性别 (下拉) -->
+      <div class="form-group">
+
+        <label for="genderSelect">性别</label>
+        <select id="genderSelect">
+          <option value="" selected>— 请选择 —</option>
+          <option value="男">男</option>
+          <option value="女">女</option>
+        </select>
+      </div>
+
+      <!-- 3. 职位 (下拉) -->
+      <div class="form-group">
+        <label for="positionSelect">职位</label>
+        <select id="positionSelect">
+          <option value="" selected>— 请选择 —</option>
+          <option value="班主任">班主任</option>
+          <option value="讲师">讲师</option>
+          <option value="学工主管">学工主管</option>
+          <option value="教研主管">教研主管</option>
+          <option value="咨询师">咨询师</option>
+        </select>
+      </div>
+
+      <!-- 按钮组 (查询 + 清空) -->
+      <div class="button-group">
+
+        <button type="submit" class="btn btn-primary">查询</button>
+        <button type="reset" class="btn btn-outline">清空</button>
+
+      </div>
+
+    </form>
+  </div>
+
+  <!-- 纯粹装饰提示 (不属于导航栏/搜索表单) -->
+  <div class="demo-hint">
+    
+  </div>
+</body>
+</html>

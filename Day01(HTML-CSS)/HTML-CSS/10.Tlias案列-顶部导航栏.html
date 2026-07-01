@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Tlias智能学习辅助系统 | 顶部导航栏</title>
+  <style>
+    /* 全局样式重置，确保一致性 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', 'Noto Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background-color: #f5f7fa; /* 柔和背景，仅用于衬托导航栏 */
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+    }
+
+    /* 顶部导航栏：灰色背景，符合需求 */
+    .top-navbar {
+      background-color: #4a5568; /* 深灰色背景，沉稳且清晰 */
+      /* 也可以使用 #6b7280 或 #7c7f82，此处选择可读性好的灰色 */
+      background-color: #5a6268; /* 略带暖灰，视觉舒适 */
+      /* 保证与常见灰色背景协调，同时确保文字对比度 */
+      width: 100%;
+      padding: 0 2rem; /* 左右内边距，让内容不贴边 */
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* 轻微阴影，增加层次感 */
+      /*设置字体为楷体*/
+      font-family: '楷体', '宋体', sans-serif;
+
+    }
+
+    /* 导航栏内部容器：使用flex布局实现一行显示，左右分布 */
+    .navbar-container {
+      display: flex;
+      align-items: center;          /* 垂直居中 */
+      justify-content: space-between; /* 标题居左，链接居右 */
+      max-width: 1400px;
+      margin: 0 auto;             /* 大屏幕居中，保持内容宽度合理 */
+      height: 64px;               /* 固定高度，导航栏清晰 */
+      width: 100%;
+    }
+
+    /* 标题样式：加粗、醒目，左对齐 */
+    .navbar-title {
+      font-size: 1.5rem;          /* 24px左右，醒目且不夸张 */
+      font-weight: 700;           /* 加粗展示，符合需求 */
+      color: #ffffff;             /* 白色文字，在灰色背景上清晰可见 */
+      letter-spacing: 0.02em;     /* 轻微字间距，提升辨识度 */
+      white-space: nowrap;        /* 防止标题折行 */
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2); /* 细微阴影增强立体感 */
+      line-height: 1.3;
+    }
+
+    /* 退出登录超链接样式 */
+    .logout-link {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #f0f0f0;             /* 浅白灰色，与背景形成对比 */
+      text-decoration: none;      /* 去除下划线 */
+      background-color: rgba(255, 255, 255, 0.12); /* 半透明背景，增加可点击区域感 */
+      padding: 0.5rem 1.25rem;
+      border-radius: 2rem;        /* 圆润胶囊形状 */
+      transition: all 0.2s ease;
+      display: inline-block;
+      white-space: nowrap;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(2px);
+      letter-spacing: 0.3px;
+      cursor: pointer;
+    }
+
+    /* 超链接悬停状态，提升交互反馈 */
+    .logout-link:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.4);
+      text-decoration: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transform: translateY(-1px);
+    }
+
+    /* 超链接激活/聚焦状态，保持可访问性 */
+    .logout-link:active,
+    .logout-link:focus-visible {
+      outline: 2px solid #ffffff;
+      outline-offset: 2px;
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* 响应式调整：小屏幕下适当缩小字体和内边距 */
+    @media (max-width: 600px) {
+      .top-navbar {
+        padding: 0 1rem;
+      }
+      .navbar-title {
+        font-size: 1.25rem;
+      }
+      .logout-link {
+        padding: 0.4rem 1rem;
+        font-size: 0.9rem;
+      }
+      .navbar-container {
+        height: 56px;
+      }
+    }
+
+    /* 可选：为页面其他部分预留说明（仅用于展示导航栏独立效果） */
+    .demo-note {
+      margin: 2rem auto;
+      max-width: 1400px;
+      padding: 0 2rem;
+      color: #4b5563;
+      font-size: 0.9rem;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <!-- 顶部导航栏：第一部分实现 -->
+  <header class="top-navbar" role="banner" aria-label="顶部导航栏">
+    <div class="navbar-container">
+      <!-- 标题：加粗醒目，居左显示 -->
+      <h1 class="navbar-title">Tlias智能学习辅助系统</h1>
+      
+      <!-- 退出登录超链接，居右显示（由flex的space-between实现） -->
+      <a href="#" class="logout-link" title="点击退出当前账户" aria-label="退出登录">
+        退出登录
+      </a>
+    </div>
+  </header>
+
+  <!-- 下方仅为说明区域，展示导航栏独立效果，非需求必须部分，但有助于预览 -->
+  <div class="demo-note">
+    <p style="margin-top: 1.5rem; color: #374151; font-size: 0.95rem;">
+      ✅ 顶部导航栏已展示：<strong>Tlias智能学习辅助系统</strong>（加粗标题）居左，<strong>退出登录</strong>链接居右，背景为灰色。
+    </p>
+  </div>
+</body>
+</html>
