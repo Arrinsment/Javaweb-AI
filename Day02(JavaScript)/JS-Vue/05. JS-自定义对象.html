@@ -7,9 +7,55 @@
 </head>
 <body>
   
-
   <script>
+
+    //1.自定义对象
+    // let user={
+    //   name:"tom",
+    //   age:18,
+    //   gender:"男",
+    //   sing:function(){
+    //  alert(this.name+"在唱歌")
+    //   }
+    // }
+
+
+    /* let user={
+      name:"tom",
+      age:18,
+      gender:"男",
+      sing(){
+     alert(this.name+"在唱歌")
+      }
+    } */
+
+
+    /* //不推荐写法(箭头函数写法)
+    let user={
+      name:"tom",
+      age:18,
+      gender:"男",
+      sing:()=>{
+     alert(this.name+"在唱歌")//此时的this并不是name的对象了,是上一级
+      }
+    } */
+
+    /* //2.调用对象和方法
+   alert(user.name);//tom
+   user.sing//tom在唱歌 */
+
+
+   //3.JSON-JS对象标记法
+   /* let person={
+      name:"tom",
+      age:18,
+      gender:"男"
+   }
+   alert(JSON.stringify(person));//{"name":"tom","age":18,"gender":"男"}
+    */
    
+   let personJaSon='{"name":"tom","age":18}'//这里的name和age作为key必须要用双引号引起来,{}外层要加单引号
+   alert(JSON.parse(personJaSon).name)//tom;
   </script>
 </body>
 </html>
